@@ -1,9 +1,10 @@
-type Marker = '' | 'x' | 'o'
+type Marker = 'x' | 'o'
+type Cell = Marker | ''
 
 export class Board {
-  state: Marker[]
+  state: Cell[]
 
-  constructor(state: Marker[] = ['', '', '', '', '', '', '', '', '']) {
+  constructor(state: Cell[] = ['', '', '', '', '', '', '', '', '']) {
     this.state = state
   }
 
@@ -83,5 +84,25 @@ export class Board {
 
     // there is no winner and the board is not full
     return false
+  }
+
+  // place a marker on the board
+  insert(marker: Marker, position: number) {
+    // check position is within the bounds of the board
+    if (position < 0 || position >= this.state.length) {
+      throw new Error(`Position does not exist. Received: ${position}`)
+    }
+
+    // check the marker is an x or an o
+    if (marker !== 'x' && marker !== 'o') {
+      throw new Error(`Marker must be an x or an o. Received: ${marker}`)
+    }
+
+    // position is already marked
+    if (this.state[position]) return false
+
+    // position and marker are valid, place the marker
+    this.state[position] = marker
+    return true
   }
 }
