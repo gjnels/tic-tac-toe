@@ -1,4 +1,4 @@
-type Marker = '' | 'X' | 'O'
+type Marker = '' | 'x' | 'o'
 
 export class Board {
   state: Marker[]
