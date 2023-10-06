@@ -105,4 +105,13 @@ export class Board {
     this.state[position] = marker
     return true
   }
+
+  // find all empty cell positions on the board
+  getAvailableMoves() {
+    const moves: number[] = []
+    this.state.forEach((cell, index) => {
+      if (!cell) moves.push(index)
+    })
+    return moves
+  }
 }
