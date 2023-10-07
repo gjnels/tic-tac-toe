@@ -65,4 +65,7 @@
       >
     {/each}
   </div>
+  <button on:click={newGame} class="mx-auto block rounded-md bg-slate-200 px-3 py-1 text-slate-900"
+    >New Game</button
+  >
 </main>
