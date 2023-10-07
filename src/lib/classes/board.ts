@@ -39,7 +39,7 @@ export class Board {
   // 2. the board is full and no one has won
   isTerminal() {
     // board cannot be terminal if it is empty
-    if (this.isEmpty()) return false
+    if (this.isEmpty()) return
 
     // check for horizontal win
     // row 1
@@ -82,8 +82,7 @@ export class Board {
     // there is no winner, game is a tie if all cells are full
     if (this.isFull()) return { winner: 'draw' }
 
-    // there is no winner and the board is not full
-    return false
+    // there is no winner and the board is not full, nothing is returned
   }
 
   // place a marker on the board
