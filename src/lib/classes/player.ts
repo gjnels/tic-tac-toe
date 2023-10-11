@@ -14,19 +14,23 @@ export class Player {
     if (depth === 0) this.nodesMap.clear()
 
     // if board is in a terminal state, return the heuristic value of the board
-    const terminal = board.isTerminal()
-    if (terminal?.winner === 'x') return 100 - depth
-    if (terminal?.winner === 'o') return depth - 100
-    if (depth === this.maxDepth) return 0
+    if (board.isTerminal() || depth === this.maxDepth) {
+      if (board.isTerminal()?.winner === 'x') return 100 - depth
+      if (board.isTerminal()?.winner === 'o') return depth - 100
+      return 0
+    }
 
     let best = maximizing ? -100 : 100
+
     board.getAvailableMoves().forEach((index) => {
-      const boardCopy = new Board([...board.state])
-      boardCopy.insert(maximizing ? 'x' : 'o', index)
-      const nodeValue = this.getBestMove(boardCopy, !maximizing, depth + 1)
+      const child = new Board([...board.state])
+      child.insert(maximizing ? 'x' : 'o', index)
+      const nodeValue = this.getBestMove(child, !maximizing, depth + 1)
       best = maximizing ? Math.max(nodeValue, best) : Math.min(nodeValue, best)
       if (depth === 0) {
-        const moves = [...(this.nodesMap.get(nodeValue) || []), index]
+        const moves = [index]
+        const previousMoves = this.nodesMap.get(nodeValue)
+        if (previousMoves) moves.push(...previousMoves)
         this.nodesMap.set(nodeValue, moves)
       }
     })
