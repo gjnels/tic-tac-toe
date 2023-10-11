@@ -1,26 +1,23 @@
 <script lang="ts">
-  import { X, Circle } from 'lucide-svelte'
+  import { X, Circle, Award, Frown, Ban } from 'lucide-svelte'
   import { Board } from '$lib/classes/board'
   import { Player } from '$lib/classes/player'
+  import { fade, fly } from 'svelte/transition'
 
   const player = new Player()
   let board: Board
   let turn: 1 | 0
+  let gameOver: ReturnType<Board['isTerminal']>
 
   function newGame() {
     board = new Board()
     turn = 1
+    gameOver = undefined
   }
 
   function checkGameOver() {
-    const gameOver = board.isTerminal()
-    if (gameOver) {
-      if (gameOver.winner === 'x') alert('You win!')
-      if (gameOver.winner === 'o') alert('You lost!')
-      if (gameOver.winner === 'draw') alert("It's a tie!")
-      return true
-    }
-    return false
+    gameOver = board.isTerminal()
+    return !!gameOver
   }
 
   function takeTurn(position: number) {
@@ -75,7 +72,39 @@
       </button>
     {/each}
   </div>
-  <button on:click={newGame} class="mx-auto block rounded-md bg-slate-200 px-3 py-1 text-slate-900"
+  <button
+    on:click={newGame}
+    class="mx-auto block rounded-md bg-slate-200 px-3 py-1 text-slate-900 hover:bg-slate-700 hover:text-white"
     >New Game</button
   >
 </main>
+
+{#if gameOver}
+  <div transition:fade class="fixed inset-0 bg-slate-900/50" />
+  <div class="fixed inset-0 m-4 grid place-items-center">
+    <div
+      transition:fly={{ y: 10 }}
+      class="flex w-full max-w-md flex-col items-center gap-4 rounded-xl bg-white p-6 shadow"
+    >
+      <h2 class="text-xl font-medium">Game Over</h2>
+      <p class="flex items-center gap-2 text-3xl font-semibold">
+        {#if gameOver.winner === 'x'}
+          <Award size="1em" class="text-green-500" />
+          <span>You win!!</span>
+        {:else if gameOver.winner === 'o'}
+          <Frown size="1em" class="text-red-500" />
+          <span>Sorry, you lost.</span>
+        {:else}
+          <Ban size="1em" class="text-amber-500" />
+          <span>It's a tie!</span>
+        {/if}
+      </p>
+      <button
+        on:click={newGame}
+        class="rounded-md bg-slate-200 px-3 py-1 text-slate-900 hover:bg-slate-700 hover:text-white"
+      >
+        New Game
+      </button>
+    </div>
+  </div>
+{/if}
