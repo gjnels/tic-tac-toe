@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { X, Circle } from 'lucide-svelte'
   import { Board } from '$lib/classes/board'
   import { Player } from '$lib/classes/player'
 
@@ -44,7 +45,7 @@
 
     // take computer turn
     turn = 0
-    board.insert('o', player.getBestMove(board))
+    board.insert('o', player.getBestMove(board, false))
     board = board
 
     // check for a win
@@ -60,9 +61,18 @@
 <main class="mx-auto w-full max-w-xl">
   <div class="m-4 grid aspect-square max-w-xl grid-cols-3 grid-rows-3 gap-1 p-1">
     {#each board.state as cell, index (index)}
-      <button tabindex="-1" class="bg-slate-300" disabled={!!cell} on:click={() => takeTurn(index)}
-        >{cell}</button
+      <button
+        tabindex="-1"
+        class="inline-flex items-center justify-center bg-slate-300"
+        disabled={!!cell}
+        on:click={() => takeTurn(index)}
       >
+        {#if cell === 'x'}
+          <X size="50%" />
+        {:else if cell === 'o'}
+          <Circle size="50%" />
+        {/if}
+      </button>
     {/each}
   </div>
   <button on:click={newGame} class="mx-auto block rounded-md bg-slate-200 px-3 py-1 text-slate-900"
